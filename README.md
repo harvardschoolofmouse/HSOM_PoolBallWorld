@@ -61,6 +61,13 @@ NB: When installing on Windows 7, additional steps (downloading Powershell 3 and
   https://support.esri.com/en/technical-article/000019210
 
 
+### Running Jupyter-Notebook from the virtual environment:
+
+Simply enter the virtual environment from Bash and enter the command
+
+  `jupyter-notebook`
+  
+ to begin a session. You can then open the existing .ipynb files or create a new one with the virtual environment kernerl.
 
 
 
