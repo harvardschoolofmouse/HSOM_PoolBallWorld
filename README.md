@@ -12,53 +12,53 @@ NB: When installing on Windows 7, additional steps (downloading Powershell 3 and
 
 2. I created a conda virtual environment in Bash using the following:
 
-`$ conda create -n gaming_environment python=3.7.3 anaconda`
+  `$ conda create -n gaming_environment python=3.7.3 anaconda`
 
-The virtual environment will keep code versions for this project isolated from the rest of the system. It has installed the Anaconda default libraries for python 3.7.3.
+  The virtual environment will keep code versions for this project isolated from the rest of the system. It has installed the Anaconda default libraries for python 3.7.3.
 
 3. Next, activate the virtual environment
 
-`$ conda activate gaming_environment`
+  `$ conda activate gaming_environment`
 
-You should see the Bash prompt change from:
+ You should see the Bash prompt change from:
 
-`(Base) Your-Computer:~`
+  `(Base) Your-Computer:~`
 
-to
+ to
 
-`(gaming_environment) Your-Computer:~ User$`
+  `(gaming_environment) Your-Computer:~ User$`
 
-We will need to enter the virtual environment to run the programs in the Repo.
+ We will need to enter the virtual environment to run the programs in the Repo.
 
 
 ### Within the virtual environment: 
 
 4. Install pygame. The -U tag will update to the latest versions:
 
-`$ python3 -m pip install -U pygame`
+  `$ python3 -m pip install -U pygame`
 
-I've read a lot of nightmare stories about this potentially not working. Run the example to test that all went well:
+ I've read a lot of nightmare stories about this potentially not working. Run the example to test that all went well:
 
-`$ python3 -m pygame.examples.aliens`
+  `$ python3 -m pygame.examples.aliens`
 
 5. Install PyJulia so that python and julia language can be run from the same jupyter-notebook kernel. This is done from within python.
 (This page is helpful: https://pyjulia.readthedocs.io/en/latest/usage.html)
 
-`$ python`
-`>>> import julia`
-`>>> julia.install()`
+  `$ python`
+  `>>> import julia`
+  `>>> julia.install()`
 
-For me, this was not sufficient due to the Conda environment. When running in jupyter-notebook, I had to additionally add a code block at the top to import Julia to the notebook:
+ For me, this was not sufficient due to the Conda environment. When running in jupyter-notebook, I had to additionally add a code block at the top to import Julia to the notebook:
 
-`from julia.api import Julia
-jl = Julia(compiled_modules=False)`
-
+  `from julia.api import Julia
+  jl = Julia(compiled_modules=False)`
 
 6. Finally, we need to make a kernel for Jupyter-Notebook for our virtual environment. 
-`ipython kernel install --user --name gaming-environment --display-name "Python Gaming Environment"`
 
-This article was helpful for installing the `gaming-environment` virtual environment kernel in Jupyter-Notebook:
-https://support.esri.com/en/technical-article/000019210
+  `ipython kernel install --user --name gaming-environment --display-name "Python Gaming Environment"`
+
+ This article was helpful for installing the `gaming-environment` virtual environment kernel in Jupyter-Notebook:
+  https://support.esri.com/en/technical-article/000019210
 
 
 
