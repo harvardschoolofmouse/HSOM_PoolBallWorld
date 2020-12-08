@@ -1,5 +1,5 @@
-# Harvard School of Mouse: Pool Ball World (HSOM_PoolBallWorld)
- Contains PyJulia, Julia, Gen, Python and Pygame dependencies for Pool Ball World
+# Harvard School of Mouse: Pool Ball World 
+*(HSOM_PoolBallWorld)* Contains PyJulia, Julia, Gen, Python and Pygame dependencies for Pool Ball World
 
 
 # Getting started
