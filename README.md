@@ -70,5 +70,9 @@ Simply enter the virtual environment from Bash and enter the command
  to begin a session. You can then open the existing .ipynb files or create a new one with the virtual environment kernerl.
 
 
+# Getting started with Pygame
+
+I found this tutorial helpful:
+https://www.youtube.com/watch?v=cJbnWZGX-XY&list=PL9ooVrP1hQOHY-BeYrKHDrHKphsJOyRyu&index=62
 
 
