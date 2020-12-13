@@ -86,4 +86,6 @@ I am currently implementing the elastic collisions in Pymunk. Right now, the Pyg
 
 Currently I am testing and debugging the *_simulation.py files in the main directory. Don't expect it to look good...but it will work!
 
+Follow along with Generative model validation and testing in the *.ipynb's!
+
 
