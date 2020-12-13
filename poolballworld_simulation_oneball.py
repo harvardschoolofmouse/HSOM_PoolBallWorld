@@ -95,7 +95,7 @@ class Ball:
         self.y = y
         self.ballNo = ballNo
         if self.ballNo == 1:
-            self.color = (255,0,0)
+            self.color = (0,0,255)#(255,0,0)
         elif self.ballNo == 2:
             self.color = (0,255,0)
         else:
@@ -307,8 +307,8 @@ ball_movement = 0
 
 
 # Including music -- can play a song once or on a loop
-pygame.mixer.music.load('stressclock.mp3')
-pygame.mixer.music.play(-1) # indexes from 1, so zero means play once.
+#pygame.mixer.music.load('stressclock.mp3')
+#pygame.mixer.music.play(-1) # indexes from 1, so zero means play once.
 # to play infinitely, use -1, to play once is 0
 # pygame.mixer.music.stop() -- stops current song and also erases whole queue
 
@@ -324,20 +324,20 @@ table,pockets,walls = draw_grid(table_surface)
  
 done = False
 has_collided = False
-xs = [50.,150.,250.]
-ys = [50.,150.,250.]
-speeds = [1., 1., 1.]
-angles = [math.radians(i) for i in [270.,180.+45.,180.]]
-colors = [(0,128,255), (255,100,0), (100,255,0)]
+xs = [50.]#,150.,250.]
+ys = [50.]#,150.,250.]
+speeds = [1.0/5.0] #[1.]#, 1., 1.]
+angles = [math.radians(i) for i in [-25.]]#,180.+45.,180.]]
+colors = [(0,128,255)] #(0,128,255)]#, (255,100,0), (100,255,0)]
 
 # collect our balls:
 balls = []
 for i in range(0,len(xs)):
     balls.append(Ball(xs[i], ys[i], speeds[i], angles[i], i+1))
 
-ball_surface = pygame.Surface((_ballRadius*2,_ballRadius*2))
-rect = ball_surface.get_rect(center = (xs[0], ys[0]))
-ball = pygame.draw.circle(ball_surface, colors[0], (_ballRadius,_ballRadius),_ballRadius)
+#ball_surface = pygame.Surface((_ballRadius*2,_ballRadius*2))
+#rect = ball_surface.get_rect(center = (xs[0], ys[0]))
+#ball = pygame.draw.circle(ball_surface, colors[0], (_ballRadius,_ballRadius),_ballRadius)
 
 clock = pygame.time.Clock()
 
@@ -401,7 +401,7 @@ try:
     #            balls[i].checkCollision(walls)
             balls[i].render(screen)
     #    ball_surface.get_rect(center = (xs[0], ys[0]))
-        screen.blit(ball_surface, (xs[0]-_ballRadius, ys[0]-_ballRadius))
+#        screen.blit(ball_surface, (xs[0]-_ballRadius, ys[0]-_ballRadius))
         
     #    ball = pygame.draw.circle(ball_surface, colors[0], (ballRadius,ballRadius),ballRadius)
                 
