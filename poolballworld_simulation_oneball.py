@@ -3,7 +3,9 @@
 """
 Created on Tue Dec  8 18:55:26 2020
 
-@author: lilis
+@author: A Hamilos [ahamilos at g.harvard.edu]
+
+This version intended for construction, testing and debugging.
 """
 
 #!/usr/bin/env python3
