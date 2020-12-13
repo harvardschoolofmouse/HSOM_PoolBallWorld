@@ -78,10 +78,12 @@ https://www.youtube.com/watch?v=cJbnWZGX-XY&list=PL9ooVrP1hQOHY-BeYrKHDrHKphsJOy
 
 #### It turns out Pygame does not have a physics engine! (as I learned after many hours of fussing) You will also need Pymunk for the elastic collisions to work properly
 
+I am currently implementing the elastic collisions in Pymunk. Right now, the Pygame-only simulation functions well for 1-ball scenarios but fails on 2+. Though enjoy watching some very weird physics with 2+ balls if you're interested (12/12/2020 20:50 EST - AH)
+
+
 
 # Working files
 
-Currently we are testing and debugging the *_simulation.py files in the main directory
+Currently I am testing and debugging the *_simulation.py files in the main directory. Don't expect it to look good...but it will work!
 
-I am currently implementing the elastic collisions in Pymunk. Right now, the Pygame-only simulation functions well for 1-ball scenarios but fails on 2+. Though enjoy watching some very weird physics with 2+ balls if you're interested (12/12/2020 20:50 EST - AH)
 
