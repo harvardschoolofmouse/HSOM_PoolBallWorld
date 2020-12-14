@@ -14,7 +14,7 @@ NB: When installing on Windows 7, additional steps (downloading Powershell 3 and
 
   `$ conda create -n gaming_environment python=3.7.3 anaconda`
 
-  The virtual environment will keep code versions for this project isolated from the rest of the system. It has installed the Anaconda default libraries for python 3.7.3.
+  The virtual environment will keep code versions for this project isolated from the rest of the system. It has installed the Anaconda default libraries for python 3.7.3. This page was useful: https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/20/conda/#:~:text=A%20virtual%20environment%20is%20a,without%20affecting%20other%20Python%20projects.
 
 3. Next, activate the virtual environment
 
