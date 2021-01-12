@@ -83,15 +83,22 @@ I found this tutorial helpful:
 https://www.youtube.com/watch?v=cJbnWZGX-XY&list=PL9ooVrP1hQOHY-BeYrKHDrHKphsJOyRyu&index=62
 
 
-#### It turns out Pygame does not have a physics engine! (as I learned after many hours of fussing) You will also need Pymunk for the elastic collisions to work properly
+It turns out Pygame does not have a physics engine! (as I learned after many hours of fussing) You will also need Pymunk for the elastic collisions to work properly
 
-I am currently implementing the elastic collisions in Pymunk. Right now, the Pygame-only simulation functions well for 1-ball scenarios but fails on 2+. Though enjoy watching some very weird physics with 2+ balls if you're interested (12/12/2020 20:50 EST - AH)
+#### Installing Pymunk
 
+This site has useful docs:
+https://docs.conda.io/projects/conda/en/latest/commands/install.html
+
+1. Enter the virtual environment (or install directly to the environment with `-n gaming_environment`) and conda install pymunk
+
+`$ conda install -c conda-forge -n gaming_environment pymunk`
 
 
 # Working files
 
-Currently I am testing and debugging the *_simulation.py files in the main directory. Don't expect it to look good...but it will work!
+The Pool Ball World simulation can be run visually from `pool_ball_world_physics_visual.py`
+The light version (no visualization, just simulation): `pool_ball_world_physics_engine.py`
 
 Follow along with Generative model validation and testing in the *.ipynb's!
 
