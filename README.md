@@ -43,7 +43,14 @@ NB: When installing on Windows 7, additional steps (downloading Powershell 3 and
 
 5. Install PyJulia so that python and julia language can be run from the same jupyter-notebook kernel. This is done from within python.
 (This page is helpful: https://pyjulia.readthedocs.io/en/latest/usage.html)
+  
+  If using virtual env:
+  `$ python3 -m pip install julia`
+  
+  Else:
+  `$ python3 -m pip install --user julia`
 
+  Then:
   `$ python`
   `>>> import julia`
   `>>> julia.install()`
