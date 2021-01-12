@@ -213,25 +213,6 @@ class PBW(object):
         # Main loop
         try:
             while self._running and self.timer_ms < self.timelimit:
-                # pygame.event.get() clears the event 
-                #queue. If don't call, the window's 
-                #messages will pile up, game gets slow
-                # EVENT PUMPING
-                for event in pygame.event.get():
-                    # pygame.QUIT called when you hit 
-                    # x marker in corner
-                    if event.type == pygame.QUIT:
-                        self.done= True
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            self.done = True
-                    if event.type == self.STARTMOTION:
-                        self.started = True
-                    if event.type == self.CLOCKTICK: # count up the clock
-                        #Timer
-                        self.timer_ms += 1
-#                        if self.timer_ms % 1000 == 0:
-#                            print("Time: ", self.timer_ms/1000., "s")
                 
                 # Progress time forward
                 for x in range(self._physics_steps_per_frame):
@@ -245,7 +226,7 @@ class PBW(object):
                 self._screen.blit(self.table_surface, (0,0))
                 # Delay fixed time between frames
                 self._clock.tick(50)
-                pygame.display.set_caption("fps: " + str(self._clock.get_fps()))
+#                pygame.display.set_caption("time: " + str(self.timer_ms/1000))#str(self._clock.get_fps()))
                 
                 if self.done:
                     pygame.quit()
@@ -279,13 +260,25 @@ class PBW(object):
         Handle game and events like keyboard input. Call once per frame only.
         :return: None
         """
+        # pygame.event.get() clears the event 
+        #queue. If don't call, the window's 
+        #messages will pile up, game gets slow
+        # EVENT PUMPING
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self._running = False
+            
+            elif event.type == self.CLOCKTICK: # count up the clock
+                #Timer
+                self.timer_ms += 1
+                if self.timer_ms % 1000 == 0:
+                    pygame.display.set_caption("time: " + str(self.timer_ms/1000))
+#                        if self.timer_ms % 1000 == 0:
+#                            print("Time: ", self.timer_ms/1000., "s")
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 self._running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                pygame.image.save(self._screen, "bouncing_balls.png")
+                pygame.image.save(self._screen, "PBWsnap.png")
 
     def _update_balls(self) -> None:
         """
