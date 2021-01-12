@@ -4,13 +4,15 @@
 Created on Tue Jan 12 08:39:41 2021
 
 @author: ahamilos (ahamilos [at] g.harvard.edu)
+
+pool_ball_world_physics_engine.py
 """
 
 """
 Visual simulation of Pool Ball World Physics. Built from example from Pymunk
 """
 
-__version__ = "$Id:$"
+__version__ = "1.0.0" #"$Id:$"
 __docformat__ = "reStructuredText"
 
 # Python imports
@@ -44,42 +46,21 @@ collision_types = {
 }
 
 
-# generic functions
-def draw_grid(surface):
-    global _tableSize, _tableEdges
-    pocket_topleft_top = pygame.draw.rect(surface, (255,0,0), (0,0,50+_tableEdges,_tableEdges))
-    pocket_topleft_left = pygame.draw.rect(surface, (255,0,0), (0,0,_tableEdges,50+_tableEdges))
-    pocket_bottomright_bottom = pygame.draw.rect(surface, (255,0,0), (_tableSize[0]-50+_tableEdges,_tableSize[1]+_tableEdges,50+_tableEdges,_tableEdges))
-    pocket_bottomright_right = pygame.draw.rect(surface, (255,0,0), (_tableSize[0]+_tableEdges,_tableSize[1]-50+_tableEdges,_tableEdges,50+_tableEdges))
-    pocket_topright_top = pygame.draw.rect(surface, (255,0,0), (_tableSize[0]-50+_tableEdges,0,50+_tableEdges,_tableEdges))
-    pocket_topright_right = pygame.draw.rect(surface, (255,0,0), (_tableSize[0]+_tableEdges,0,_tableEdges,50+_tableEdges))
-    pocket_bottomleft_bottom = pygame.draw.rect(surface, (255,0,0), (0,_tableSize[1]+_tableEdges,50+_tableEdges,_tableEdges))
-    pocket_bottomleft_left = pygame.draw.rect(surface, (255,0,0), (0,_tableSize[1]-50+_tableEdges,_tableEdges,50+_tableEdges))
-
-    wall_top = pygame.draw.rect(surface, (0,0,0), (50+_tableEdges,0,_tableSize[0]-100,_tableEdges))
-    wall_left = pygame.draw.rect(surface, (0,0,0), (0,50+_tableEdges,_tableEdges,_tableSize[1]-100))
-    wall_bottom = pygame.draw.rect(surface, (0,0,0), (50+_tableEdges,_tableSize[1]+_tableEdges,_tableSize[0]-100,_tableEdges))
-    wall_right = pygame.draw.rect(surface, (0,0,0), (_tableSize[0]+_tableEdges,50+_tableEdges,_tableEdges,_tableSize[1]-100))
-    
-    pockets = {'topleft': (pocket_topleft_top,pocket_topleft_left), 'topright': (pocket_topright_right,pocket_topright_top), 'bottomleft': (pocket_bottomleft_bottom, pocket_bottomleft_left), 'bottomright': (pocket_bottomright_right, pocket_bottomright_bottom)}
-    walls = {'wall_top': wall_top, 'wall_left': wall_left, 'wall_bottom': wall_bottom, 'wall_right':wall_right}
-    table = pygame.draw.rect(surface, (255,255,255), (_tableEdges,_tableEdges, _tableSize[0], _tableSize[1]))
-    color = (0.8*255,0.8*255,0.8*255)
-    xpnts = range(1, _tableSize[0], 100)
-    ypnts = range(1, _tableSize[1], 100)
-    for i in range(1,len(xpnts)):
-        pygame.draw.line(surface, color, (xpnts[i]+_tableEdges,1+_tableEdges), (xpnts[i]+_tableEdges,_tableSize[1]+_tableEdges), 1)
-    for i in range(1,len(ypnts)):
-        pygame.draw.line(surface, color, (1+_tableEdges,ypnts[i]+_tableEdges), (_tableSize[0]+_tableEdges,ypnts[i]+_tableEdges), 1)
-    return (table, pockets, walls)
-
 
 class PBW(object):
     """
     This class implements Pool Ball World simulations
     """
 
-    def __init__(self, xs, ys, speeds, angles, timelimit=10000) -> None:
+    def __init__(self, xs, ys, speeds, angles, timelimit=10000, verbose=True) -> None:
+        self.verbose = verbose
+        # Data
+        self.xs = xs
+        self.ys = ys
+        self.speeds = speeds
+        self.angles = angles
+        self.colors = [(0,128,255, 255), (255,100,0, 255), (100,255,0, 255)]
+       
         # Space
         self._space = pymunk.Space()
         self._space.gravity = (0.0, 0.0)#900.0) removing gravity for PBW
@@ -92,62 +73,30 @@ class PBW(object):
         # Number of physics steps per screen frame
         self._physics_steps_per_frame = 1
         
-
         # Balls that exist in the world
         self._balls: List[pymunk.Circle] = []
 
         # pygame
         pygame.init() 
 
-        
-        self.done = False
-#        done = False
-#        has_collided = False
-        self.xs = [50.]#,150.,250.]
-        self.ys = [50.]#,150.,250.]
-        self.speeds = [1.0/5.0] #[1.]#, 1., 1.]
-        self.angles = [math.radians(i) for i in [-25.]]#,180.+45.,180.]]
-        self.colors = [(0,128,255, 255), (255,100,0, 255), (100,255,0, 255)]
-        
-#        # collect our balls:
-#        self.balls = []
+        # collect our balls:
         self.balls_in_pocket = []
         for i in range(0,len(xs)):
             self._create_ball(x=xs[i], y=ys[i], speed=speeds[i], angle=angles[i], color=self.colors[i])
             self.balls_in_pocket.append(False)
-#            balls.append(Ball(xs[i], ys[i], speeds[i], angles[i], i+1))
         
-      
         
-        self.STARTMOTION = pygame.USEREVENT
-        pygame.time.set_timer(self.STARTMOTION, 10) #ms
         self.CLOCKTICK = pygame.USEREVENT+1
         pygame.time.set_timer(self.CLOCKTICK, 1) 
         self.timer_ms = 0
         
-        self.started = False
-        
-        
-        
-        # window of desired size, a surface obj
-        self._screen = pygame.display.set_mode((_tableSize[0] + 2*_tableEdges,_tableSize[1] + 2*_tableEdges))
-        self.table_surface = pygame.Surface((_tableSize[0] + 2*_tableEdges,_tableSize[1] + 2*_tableEdges))
-        #table,pockets,walls = draw_grid(table_surface, tableSize,tableEdges)
-        self.table,self.pockets,self.walls = draw_grid(self.table_surface)
-#        self._screen = pygame.display.set_mode((600, 600))
         self._clock = pygame.time.Clock()
-
-        self._draw_options = pymunk.pygame_util.DrawOptions(self._screen)
 
         # Static barrier walls (lines) that the balls bounce off of
         self._add_static_scenery()
 
-
-
         # Execution control and time until the next ball spawns
         self._running = True
-#        self._ticks_to_next_ball = 10
-        
         
         # add deets to handle collision tracking
         # collision_times_ball_ball
@@ -157,32 +106,24 @@ class PBW(object):
             ball_shape_0 = arbiter.shapes[0]
             ball_shape_1 = arbiter.shapes[1]         
             if ball_shape_0.color[1] == self.colors[1][1]:
-#                ball_0_ix = 1
                 if ball_shape_1.color[1] == self.colors[2][1]:
-#                    ball_1_ix = 2
                     key = "1-2"
                 else:
-#                    ball_1_ix = 3
                     key = "1-3"
             elif ball_shape_0.color[1] == self.colors[2][1]:
-#                ball_0_ix = 2
                 if ball_shape_1.color[1] == self.colors[1][1]:
-#                    ball_1_ix = 1
                     key = "1-2"
                 else:
-#                    ball_1_ix = 3
                     key = "2-3"
             else:
-#                ball_0_ix = 3
                 if ball_shape_1.color[1] == self.colors[2][1]:
-#                    ball_1_ix = 2
                     key = "2-3"
                 else:
-#                    ball_1_ix = 1
                     key = "1-3"
                     
             self.collision_times_ball_ball[key].append(self.timer_ms/1000)
-            print("Collision ", key, " at: ", self.timer_ms/1000)
+            if verbose:
+                print("Collision ", key, " at: ", self.timer_ms/1000)
                 
         h = self._space.add_collision_handler(collision_types["ball"], collision_types["ball"])
         h.separate = get_collision_time
@@ -190,8 +131,7 @@ class PBW(object):
         # collision_times_ball_wall
         self.collision_times_ball_wall = {"1-wall": [], "2-wall": [], "3-wall": []}
         def get_collision_time_walls(arbiter, space, data):
-            ball = arbiter.shapes[0]
-#            wall = arbiter.shapes[1]         
+            ball = arbiter.shapes[0]        
             if ball.color[1] == self.colors[1][1]:
                 key = "1-wall"
             elif ball.color[1] == self.colors[2][1]:
@@ -200,7 +140,8 @@ class PBW(object):
                 key = "3-wall"
                     
             self.collision_times_ball_wall[key].append(self.timer_ms/1000)
-            print("Collision ", key, " at: ", self.timer_ms/1000)
+            if verbose:
+                print("Collision ", key, " at: ", self.timer_ms/1000)
                 
         h = self._space.add_collision_handler(collision_types["ball"], collision_types["wall"])
         h.separate = get_collision_time_walls
@@ -213,25 +154,6 @@ class PBW(object):
         # Main loop
         try:
             while self._running and self.timer_ms < self.timelimit:
-                # pygame.event.get() clears the event 
-                #queue. If don't call, the window's 
-                #messages will pile up, game gets slow
-                # EVENT PUMPING
-                for event in pygame.event.get():
-                    # pygame.QUIT called when you hit 
-                    # x marker in corner
-                    if event.type == pygame.QUIT:
-                        self.done= True
-                    if event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_ESCAPE:
-                            self.done = True
-                    if event.type == self.STARTMOTION:
-                        self.started = True
-                    if event.type == self.CLOCKTICK: # count up the clock
-                        #Timer
-                        self.timer_ms += 1
-#                        if self.timer_ms % 1000 == 0:
-#                            print("Time: ", self.timer_ms/1000., "s")
                 
                 # Progress time forward
                 for x in range(self._physics_steps_per_frame):
@@ -239,16 +161,10 @@ class PBW(object):
     
                 self._process_events()
                 self._update_balls()
-#                self._clear_screen()
-                self._draw_objects()
-                pygame.display.flip()
-                self._screen.blit(self.table_surface, (0,0))
-                # Delay fixed time between frames
-                self._clock.tick(50)
-                pygame.display.set_caption("fps: " + str(self._clock.get_fps()))
                 
-                if self.done:
-                    pygame.quit()
+#                # Delay fixed time between frames
+                self._clock.tick(50)
+                
         except:
             pygame.quit()
             raise
@@ -280,12 +196,15 @@ class PBW(object):
         :return: None
         """
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self._running = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-                self._running = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_p:
-                pygame.image.save(self._screen, "bouncing_balls.png")
+            if event.type == self.CLOCKTICK: # count up the clock
+                #Timer
+                self.timer_ms += 1
+                
+        if sum(self.balls_in_pocket) == len(self.balls_in_pocket):
+            if self.verbose:
+                print("All balls in pocket")
+            self._running = False
+
 
     def _update_balls(self) -> None:
         """
@@ -296,7 +215,8 @@ class PBW(object):
             ball = self._balls[i]
             if ball.body.position.x < _tableEdges or ball.body.position.y < _tableEdges or ball.body.position.x > _tableEdges*2+_tableSize[0] or ball.body.position.y > _tableEdges*2+_tableSize[1]:
                 if self.balls_in_pocket[i] == False:
-                    print("Ball ", i+1, "in the pocket at ", self.timer_ms/1000, "s!")
+                    if self.verbose:
+                        print("Ball ", i+1, "in the pocket at ", self.timer_ms/1000, "s!")
                     self.balls_in_pocket[i] = self.timer_ms/1000
         
     def _create_ball(self, x=random.randint(115, 350), y=200, speed=0, angle=0, color=(255, 0, 0, 255)) -> None:
@@ -330,25 +250,11 @@ class PBW(object):
         
         
 
-    def _clear_screen(self) -> None:
-        """
-        Clears the screen.
-        :return: None
-        """
-        self._screen.fill(pygame.Color("white"))
-
-    def _draw_objects(self) -> None:
-        """
-        Draw the objects.
-        :return: None
-        """
-        self._space.debug_draw(self._draw_options)
-        
     
 
 
 if __name__ == "__main__":
-    game = PBW(xs, ys, speeds, angles, timelimit)
+    game = PBW(xs, ys, speeds, angles, timelimit, verbose=False)
     game.run()
     print(game.collision_times_ball_ball)
     print(game.collision_times_ball_wall)
