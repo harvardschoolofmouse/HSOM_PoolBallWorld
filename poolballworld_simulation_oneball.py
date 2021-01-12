@@ -27,9 +27,6 @@ _tableSize = [3*100, 3*100]
 _tableEdges = 20
 _ballRadius = 23
 
-# to include images, we need the png sources in the working directory
-# I'll use John's head as example - johnpic.jpg
-
 _image_library = {}
 #image = pygame.image.load('johnpic.jpg')
 _songs = ['stressclock.mp3', 'stressclock.mp3']#'stresspulse.mp3']
