@@ -95,6 +95,33 @@ https://docs.conda.io/projects/conda/en/latest/commands/install.html
 `$ conda install -c conda-forge -n gaming_environment pymunk`
 
 
+# Possible errors
+
+I have run into some errors trying to get julia to align with the anaconda virtual environment's python version. There's some snaffu getting PyCall, PyJulia and Conda to interact properly. You may see:
+
+`using PyPlot
+INTEL MKL ERROR: dlopen(/opt/anaconda3/lib/libmkl_intel_thread.dylib, 9): Library not loaded: @rpath/libiomp5.dylib
+  Referenced from: /opt/anaconda3/lib/libmkl_intel_thread.dylib
+  Reason: image not found.
+Intel MKL FATAL ERROR: Cannot load libmkl_intel_thread.dylib.`
+
+If so, you can solve this by putting the path to the desired python file as the desired environment. 
+
+`julia> ENV["PYTHON"] = /pathtopython...`
+
+Or, to fix and revert to the original julia in-built python version, you can use
+
+`julia> ENV["PYTHON"] = ""`
+
+You then need to rebuild PyCall:
+
+`julia> using Pkg
+... Pkg.build("PyCall")`
+
+And then quit julia, python etc and restart the terminal/notebook kernel. If it doesn't work at first, close everything and try again.
+
+
+
 # Working files
 
 The Pool Ball World simulation can be run visually from `pool_ball_world_physics_visual.py`
